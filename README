@@ -51,8 +51,8 @@ METHODS
     the localisation process.
 
   localized $file
-    The "localized" method takes an argument of a single file name and tests
-    it to see it is localized correctly.
+    The "localized" method takes an argument of a single file name or file
+    handle and tests it to see it is localized correctly.
 
     Returns true if localized correctly, false if not, or "undef" on error.
 
@@ -65,9 +65,9 @@ METHODS
     if an incorrect path was provided.
 
   localize $file | $dir
-    The "localize" method takes a file or directory as argument and
-    localizes the newlines of the file, or all files within the directory
-    (that match the filter if one was provided).
+    The "localize" method takes a file, file handle or directory as argument
+    and localizes the newlines of the file, or all files within the
+    directory (that match the filter if one was provided).
 
     Returns the number of files that were localized, zero if no files needed
     to be localized, or "undef" on error.
@@ -85,6 +85,8 @@ AUTHOR
 ACKNOWLEDGEMENTS
     Thank you to Phase N (<http://phase-n.com/>) for permitting the open
     sourcing and release of this distribution.
+
+    FileHandle support added by David Dick <ddick@cpan.org>
 
 COPYRIGHT
     Copyright (c) 2005 Adam Kennedy. All rights reserved.

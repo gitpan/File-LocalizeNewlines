@@ -15,9 +15,10 @@ BEGIN {
 	}
 }
 
-use Test::More tests => 42;
-use File::Slurp ();
-use File::Find::Rule ();
+use Test::More tests => 46;
+use FileHandle             ();
+use File::Slurp            ();
+use File::Find::Rule       ();
 use File::LocalizeNewlines ();
 use constant FLN => 'File::LocalizeNewlines';
 use constant FFR => 'File::Find::Rule';
@@ -28,15 +29,15 @@ my $simple_dir = catfile( 't.data', 'simple' );
 my $not_file   = catfile( 't.data', 'simple', 'both.txt' );
 my $not_file2  = catfile( 't.data', 'simple', 'both.pm' );
 File::Slurp::write_file( $local_file, "foo\nbar\n" );
-File::Slurp::write_file( $not_file, "foo\015\012bar\015baz" );
-File::Slurp::write_file( $not_file2, "foo\015\012bar\015baz" );
-is( length(File::Slurp::read_file( $not_file )), 12, 'both.txt is the right length' );
+File::Slurp::write_file( $not_file,   "foo\015\012bar\015baz" );
+File::Slurp::write_file( $not_file2,  "foo\015\012bar\015baz" );
+is( length(File::Slurp::read_file( $not_file )),  12, 'both.txt is the right length' );
 is( length(File::Slurp::read_file( $not_file2 )), 12, 'both.pm is the right length' );
 
 END {
 	unlink $local_file if -e $local_file;
-	unlink $not_file if -e $not_file;
-	unlink $not_file2 if -e $not_file2;
+	unlink $not_file   if -e $not_file;
+	unlink $not_file2  if -e $not_file2;
 }
 
 
@@ -102,13 +103,22 @@ END {
 # Localisation Testing
 
 {
-
 	my $Object = FLN->new;
 	isa_ok( $Object, FLN );
-	ok( $Object->localized( $local_file ), '->localized returns true for known-local file' );
-	ok( ! $Object->localized( $not_file ), '->localized returns true for known-local file' );
-	ok( FLN->localized( $local_file ), 'static->localized returns false for known-not-local file' );
-	ok( ! FLN->localized( $not_file ), 'static->localized returns false for known-not-local file' );
+	ok( $Object->localized( $local_file ),   '->localized returns true for known-local file' );
+	ok( ! $Object->localized( $not_file ),   '->localized returns true for known-local file' );
+	ok( FLN->localized( $local_file ),       'static->localized returns false for known-not-local file' );
+	ok( ! FLN->localized( $not_file ),       'static->localized returns false for known-not-local file' );
+
+	# FileHandle versions
+	my $local_handle = new FileHandle("< $local_file");
+	my $not_handle   = new FileHandle("< $not_file");
+	ok( $Object->localized( $local_handle ), '->localized returns true for known-local file handle' );
+	ok( ! $Object->localized( $not_handle ), '->localized returns true for known-local file handle' );
+	$local_handle = new FileHandle("< $local_file");
+	$not_handle   = new FileHandle("< $not_file");
+	ok( FLN->localized( $local_handle ),     'static->localized returns false for known-not-local file handle' );
+	ok( ! FLN->localized( $not_handle ),     'static->localized returns false for known-not-local file handle' );
 }
 
 

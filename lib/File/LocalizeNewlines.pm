@@ -32,10 +32,11 @@ use UNIVERSAL 'isa';
 use base 'Class::Default';
 use File::Find::Rule ();
 use File::Slurp      ();
+use FileHandle       ();
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '0.01';
+	$VERSION = '0.02';
 }
 
 
@@ -139,8 +140,8 @@ sub newline {
 
 =head2 localized $file
 
-The C<localized> method takes an argument of a single file name and
-tests it to see it is localized correctly.
+The C<localized> method takes an argument of a single file name or
+file handle and tests it to see it is localized correctly.
 
 Returns true if localized correctly, false if not, or C<undef> on error.
 
@@ -148,7 +149,9 @@ Returns true if localized correctly, false if not, or C<undef> on error.
 
 sub localized {
 	my $self      = shift->_self;
-	my $file      = (defined $_[0] and -f $_[0]) ? shift : return undef;
+	my $file      = (defined $_[0] and ref $_[0]) ? shift
+	              : (defined $_[0] and  -f $_[0]) ? shift
+	              : return undef;
 	my $newline   = $self->newline;
 	my $content   = File::Slurp::read_file( $file );
 
@@ -191,9 +194,9 @@ sub find {
 
 =head2 localize $file | $dir
 
-The C<localize> method takes a file or directory as argument and localizes
-the newlines of the file, or all files within the directory (that match the
-filter if one was provided).
+The C<localize> method takes a file, file handle or directory as argument 
+and localizes the newlines of the file, or all files within the directory 
+(that match the filter if one was provided).
 
 Returns the number of files that were localized, zero if no files needed to
 be localized, or C<undef> on error.
@@ -202,10 +205,12 @@ be localized, or C<undef> on error.
 
 sub localize {
 	my $self = shift->_self;
-	my $path = (defined $_[0] and -e $_[0]) ? shift : return undef;
+	my $path = (defined $_[0] and ref $_[0]) ? shift
+	         : (defined $_[0] and  -e $_[0]) ? shift
+	         : return undef;
 
 	# Switch on file or dir
-	-f $path
+	(-f $path or ref $_[0])
 		? $self->_localize_file( $path )
 		: $self->_localize_dir( $path );
 }
@@ -235,7 +240,9 @@ sub _localize_dir {
 
 sub _localize_file {
 	my $self = shift->_self;
-	my $file = (defined $_[0] and -f $_[0]) ? shift : return undef;
+	my $file = (defined $_[0] and ref $_[0]) ? shift
+	         : (defined $_[0] and  -f $_[0]) ? shift
+	         : return undef;
 
 	# Does the file need to be localised
 	my $newline   = $self->newline;
@@ -270,6 +277,8 @@ Adam Kennedy (Maintainer), L<http://ali.as/>, cpan@ali.as
 
 Thank you to Phase N (L<http://phase-n.com/>) for permitting
 the open sourcing and release of this distribution.
+
+L<FileHandle> support added by David Dick <ddick@cpan.org>
 
 =head1 COPYRIGHT
 

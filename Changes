@@ -1,4 +1,7 @@
 Revision history for Perl extension File::LocalizeNewlines
 
+0.02 Sat Feb 19 2005
+	- Merged in patch from DDICK to add FileHandle support
+
 0.01 Thu Jan 27 2005
 	- Created the initial version of the module
