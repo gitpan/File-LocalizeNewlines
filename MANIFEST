@@ -18,3 +18,4 @@ t.data/ignore.txt
 t.data/simple/ignore.txt
 t/01_compile.t
 t/02_main.t
+t/99_pod.t

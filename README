@@ -24,7 +24,7 @@ METHODS
     By default, the conversion object will process all files and convert
     them to the local platform's newline format.
 
-    Takes two optional parameters
+    Takes some optional parameters
 
     filter => File::Find::Rule
         The "filter" param allows you to provide an instantiate
@@ -40,7 +40,11 @@ METHODS
 
           my $Object = File::LocalizeNewlines->new( newline => "\015\012" );
 
-    Returns a new File::LocalizeNewlines object.
+    verbose => 1
+        The "verbose" option will cause the "File::LocalizeNewlines" object
+        to print status information to "STDOUT" as it runs.
+
+    Returns a new "File::LocalizeNewlines" object.
 
   Find
     The "Find" accessor returns the File::Find::Rule object that will be

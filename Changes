@@ -1,5 +1,8 @@
 Revision history for Perl extension File::LocalizeNewlines
 
+0.03 Tue May 31 2005
+	- Added the verbose option (no unit tests for it yet)
+
 0.02 Sat Feb 19 2005
 	- Merged in patch from DDICK to add FileHandle support
 

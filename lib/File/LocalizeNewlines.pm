@@ -36,7 +36,7 @@ use FileHandle       ();
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '0.02';
+	$VERSION = '0.03';
 }
 
 
@@ -55,17 +55,17 @@ The C<new> constructor creates a new conversion object.
 By default, the conversion object will process all files and convert
 them to the local platform's newline format.
 
-Takes two optional parameters
+Takes some optional parameters
 
 =over
 
-=item filter => File::Find::Rule
+=item filter =E<gt> File::Find::Rule
 
 The C<filter> param allows you to provide an instantiate
 L<File::Find::Rule> object, that will used to determine the list of
 files to check or process.
 
-=item newline => $newline
+=item newline =E<gt> $newline
 
 The C<newline> option allows you to provide an alternative newline
 format to the local one. The newline format should be provided as a
@@ -75,9 +75,14 @@ For example, to force Win32 newlines, you would use
 
   my $Object = File::LocalizeNewlines->new( newline => "\015\012" );
 
+=item verbose =E<gt> 1
+
+The C<verbose> option will cause the C<File::LocalizeNewlines> object to
+print status information to C<STDOUT> as it runs.
+
 =back
 
-Returns a new File::LocalizeNewlines object.
+Returns a new C<File::LocalizeNewlines> object.
 
 =cut
 
@@ -97,6 +102,13 @@ sub new {
 
 	# Allow for a custom platform
 	$self->{newline} = $args{newline} if $args{newline};
+
+	# Check the verbose mode
+	if ( UNIVERSAL::can($args{verbose}, 'print') ) {
+		$self->{verbose} = $args{verbose};
+	} elsif ( $args{verbose} ) {
+		$self->{verbose} = 1;
+	}
 
 	$self;
 }
@@ -232,6 +244,7 @@ sub _localize_dir {
 		$localized =~ s/(?:\015{1,2}\012|\015|\012)/$newline/sg;
 		next if $localized eq $content;
 		File::Slurp::write_file( $file, $localized ) or return undef;
+		$self->_message( "Localized $file\n" );
 		$count++;
 	}
 
@@ -253,8 +266,21 @@ sub _localize_file {
 
 	# Save the localised version
 	File::Slurp::write_file( $file, $content ) or return undef;
+	$self->_message( "Localized $file\n" ) unless ref $file;
 
 	1;
+}
+
+sub _message {
+	my $self = shift;
+	return 1 unless defined $self->{verbose};
+	my $message = shift;
+	$message .= "\n" unless $message =~ /\n$/;
+	if ( UNIVERSAL::can( $self->{verbose}, 'print' ) ) {
+		$self->{verbose}->print( $message );
+	} else {
+		print STDOUT $message;
+	}
 }
 
 1;
