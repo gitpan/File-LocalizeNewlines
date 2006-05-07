@@ -1,18 +1,23 @@
-name: File-LocalizeNewlines
-version: 0.03
-abstract: Localize the newlines for one or more files
-author: Adam Kennedy<cpan@ali.as>
-license: perl
-distribution_type: module
-build_requires:
-  Test::More: 0.47
-  File::Spec: 0.82
-requires:
-  perl: 5.005
-  Class::Default: 1.0
-  File::Find::Rule: 0.20
-  File::Slurp: 9999.04
-no_index:
-  directory:
+
+no_index: 
+  directory: 
     - inc
-generated_by: Module::Install version 0.36
+    - t
+generated_by: Module::Install version 0.62
+distribution_type: module
+version: 0.04
+name: File-LocalizeNewlines
+author: Adam Kennedy <cpan@ali.as>
+license: perl
+build_requires: 
+  Test::More: 0.42
+requires: 
+  File::Find::Rule: 0.20
+  Getopt::Long: 0
+  perl: 5.005
+  Params::Util: 0.10
+  Class::Default: 1.0
+  File::Spec: 0.80
+  FileHandle: 0
+  File::Slurp: 9999.04
+abstract: Localize the newlines for one or more files

@@ -13,7 +13,7 @@ DESCRIPTION
 
     The module implements the conversion using a standard "universal line
     seperator" regex, which ensures that files with any of the different
-    newlins, plus a couple of common "broken" newlines, including multiple
+    newlines, plus a couple of common "broken" newlines, including multiple
     different types mixed in the same file, are all converted to the local
     platform's newline style.
 
@@ -81,10 +81,10 @@ SUPPORT
 
     <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=File-LocalizeNewlines>
 
-    For other issues, contact the maintainer
+    For other issues, contact the maintainer.
 
 AUTHOR
-    Adam Kennedy (Maintainer), <http://ali.as/>, cpan@ali.as
+    Adam Kennedy <cpan@ali.as>
 
 ACKNOWLEDGEMENTS
     Thank you to Phase N (<http://phase-n.com/>) for permitting the open
@@ -93,7 +93,7 @@ ACKNOWLEDGEMENTS
     FileHandle support added by David Dick <ddick@cpan.org>
 
 COPYRIGHT
-    Copyright (c) 2005 Adam Kennedy. All rights reserved.
+    Copyright 2005, 2006 Adam Kennedy. All rights reserved.
 
     This program is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.

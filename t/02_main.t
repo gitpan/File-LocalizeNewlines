@@ -4,14 +4,18 @@
 
 use strict;
 use lib ();
-use UNIVERSAL 'isa';
 use File::Spec::Functions ':ALL';
 BEGIN {
 	$| = 1;
 	unless ( $ENV{HARNESS_ACTIVE} ) {
 		require FindBin;
-		chdir ($FindBin::Bin = $FindBin::Bin); # Avoid a warning
-		lib->import( catdir( updir(), updir(), 'modules') );
+		$FindBin::Bin = $FindBin::Bin; # Avoid a warning
+		chdir catdir( $FindBin::Bin, updir() );
+		lib->import(
+			catdir('blib', 'arch'),
+			catdir('blib', 'lib' ),
+			catdir('lib'),
+			);
 	}
 }
 
@@ -24,10 +28,10 @@ use constant FLN => 'File::LocalizeNewlines';
 use constant FFR => 'File::Find::Rule';
 
 # Create various test files
-my $local_file = catfile( 't.data', 'local.txt' );
-my $simple_dir = catfile( 't.data', 'simple' );
-my $not_file   = catfile( 't.data', 'simple', 'both.txt' );
-my $not_file2  = catfile( 't.data', 'simple', 'both.pm' );
+my $local_file = catfile( 't', 'data', 'local.txt' );
+my $simple_dir = catfile( 't', 'data', 'simple' );
+my $not_file   = catfile( 't', 'data', 'simple', 'both.txt' );
+my $not_file2  = catfile( 't', 'data', 'simple', 'both.pm' );
 File::Slurp::write_file( $local_file, "foo\nbar\n" );
 File::Slurp::write_file( $not_file,   "foo\015\012bar\015baz" );
 File::Slurp::write_file( $not_file2,  "foo\015\012bar\015baz" );

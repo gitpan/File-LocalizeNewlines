@@ -19,7 +19,7 @@ local platform.
 
 The module implements the conversion using a standard "universal line
 seperator" regex, which ensures that files with any of the different
-newlins, plus a couple of common "broken" newlines, including
+newlines, plus a couple of common "broken" newlines, including
 multiple different types mixed in the same file, are all converted to
 the local platform's newline style.
 
@@ -27,16 +27,17 @@ the local platform's newline style.
 
 =cut
 
+use 5.005;
 use strict;
-use UNIVERSAL 'isa';
 use base 'Class::Default';
 use File::Find::Rule ();
 use File::Slurp      ();
 use FileHandle       ();
+use Params::Util     '_INSTANCE';
 
 use vars qw{$VERSION};
 BEGIN {
-	$VERSION = '0.03';
+	$VERSION = '0.04';
 }
 
 
@@ -95,7 +96,7 @@ sub new {
 		}, $class;
 
 	# Check the file filter
-	if ( isa($args{filter}, 'File::Find::Rule') ) {
+	if ( _INSTANCE($args{filter}, 'File::Find::Rule') ) {
 		$self->{Find} = $args{filter};
 		$self->{Find}->file->relative;
 	}
@@ -104,7 +105,7 @@ sub new {
 	$self->{newline} = $args{newline} if $args{newline};
 
 	# Check the verbose mode
-	if ( UNIVERSAL::can($args{verbose}, 'print') ) {
+	if ( _CAN($args{verbose}, 'print') ) {
 		$self->{verbose} = $args{verbose};
 	} elsif ( $args{verbose} ) {
 		$self->{verbose} = 1;
@@ -123,7 +124,7 @@ used for the file search.
 =cut
 
 sub Find {
-	my $self = shift->_self;
+	my $self = $_[0]->_self;
 	$self->{Find} or File::Find::Rule->file->relative;
 }
 
@@ -137,8 +138,7 @@ the localisation process.
 =cut
 
 sub newline {
-	my $self = shift->_self;
-	$self->{newline} or "\n";
+	$_[0]->_self->{newline} or "\n";
 }
 
 
@@ -189,7 +189,7 @@ or if an incorrect path was provided.
 
 sub find {
 	my $self = shift->_self;
-	my $path = (defined $_[0] and -d $_[0]) ? shift : return ();
+	my $path = _DIRECTORY(shift) or return ();
 
 	# Find all the files to test
 	my @files = $self->Find->in( $path );
@@ -229,7 +229,7 @@ sub localize {
 
 sub _localize_dir {
 	my $self = shift->_self;
-	my $path = (defined $_[0] and -d $_[0]) ? shift : return undef;
+	my $path = _DIRECTORY(shift) or return undef;
 
 	# Find the files to localise
 	my @files = $self->Find->in( $path );
@@ -276,11 +276,19 @@ sub _message {
 	return 1 unless defined $self->{verbose};
 	my $message = shift;
 	$message .= "\n" unless $message =~ /\n$/;
-	if ( UNIVERSAL::can( $self->{verbose}, 'print' ) ) {
+	if ( _CAN( $self->{verbose}, 'print' ) ) {
 		$self->{verbose}->print( $message );
 	} else {
 		print STDOUT $message;
 	}
+}
+
+sub _CAN {
+	(_INSTANCE($_[0], 'UNIVERSAL') and $_[0]->can($_[1])) ? shift : undef;
+}
+
+sub _DIRECTORY {
+	(defined $_[0] and -d $_[0]) ? shift : undef;
 }
 
 1;
@@ -293,22 +301,22 @@ Bugs should always be submitted via the CPAN bug tracker
 
 L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=File-LocalizeNewlines>
 
-For other issues, contact the maintainer
+For other issues, contact the maintainer.
 
 =head1 AUTHOR
 
-Adam Kennedy (Maintainer), L<http://ali.as/>, cpan@ali.as
+Adam Kennedy E<lt>cpan@ali.asE<gt>
 
 =head1 ACKNOWLEDGEMENTS
 
 Thank you to Phase N (L<http://phase-n.com/>) for permitting
 the open sourcing and release of this distribution.
 
-L<FileHandle> support added by David Dick <ddick@cpan.org>
+L<FileHandle> support added by David Dick E<lt>ddick@cpan.orgE<gt>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2005 Adam Kennedy. All rights reserved.
+Copyright 2005, 2006 Adam Kennedy. All rights reserved.
 
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
