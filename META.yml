@@ -1,23 +1,27 @@
-
+--- 
+abstract: Localize the newlines for one or more files
+author: Adam Kennedy <cpan@ali.as>
+build_requires: 
+  Test::More: 0.42
+distribution_type: module
+generated_by: Module::Install version 0.67
+license: perl
+meta-spec: 
+  url: http://module-build.sourceforge.net/META-spec-v1.3.html
+  version: 1.3
+name: File-LocalizeNewlines
 no_index: 
   directory: 
     - inc
     - t
-generated_by: Module::Install version 0.62
-distribution_type: module
-version: 0.05
-name: File-LocalizeNewlines
-author: Adam Kennedy <cpan@ali.as>
-license: perl
-build_requires: 
-  Test::More: 0.42
 requires: 
-  File::Find::Rule: 0.20
-  Getopt::Long: 0
-  perl: 5.005
-  Params::Util: 0.10
   Class::Default: 1.0
+  File::Find::Rule: 0.20
+  File::Remove: 0.34
+  File::Slurp: 9999.04
   File::Spec: 0.80
   FileHandle: 0
-  File::Slurp: 9999.04
-abstract: Localize the newlines for one or more files
+  Getopt::Long: 0
+  Params::Util: 0.10
+  perl: 5.005
+version: 1.07
