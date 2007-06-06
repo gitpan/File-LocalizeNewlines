@@ -3,6 +3,7 @@ abstract: Localize the newlines for one or more files
 author: Adam Kennedy <cpan@ali.as>
 build_requires: 
   Test::More: 0.42
+  Test::Script: 1.02
 distribution_type: module
 generated_by: Module::Install version 0.67
 license: perl
@@ -24,4 +25,4 @@ requires:
   Getopt::Long: 0
   Params::Util: 0.10
   perl: 5.005
-version: 1.07
+version: 1.08
