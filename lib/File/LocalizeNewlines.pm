@@ -29,15 +29,16 @@ the local platform's newline style.
 
 use 5.005;
 use strict;
-use Class::Default   ();
-use File::Find::Rule ();
-use File::Slurp      ();
-use FileHandle       ();
-use Params::Util     '_INSTANCE';
+use File::Spec       0.80 ();
+use File::Find::Rule 0.20 ();
+use File::Slurp   9999.04 ();
+use Class::Default    1.0 ();
+use FileHandle          0 ();
+use Params::Util     0.10 '_INSTANCE';
 
 use vars qw{$VERSION @ISA};
 BEGIN {
-	$VERSION = '1.10';
+	$VERSION = '1.11';
 	@ISA     = 'Class::Default';
 }
 
@@ -265,7 +266,7 @@ sub _localize_file {
 	return 0 if $content eq $localized;
 
 	# Save the localised version
-	File::Slurp::write_file( $file, $content ) or return undef;
+	File::Slurp::write_file( $file, $localized ) or return undef;
 	$self->_message( "Localized $file\n" ) unless ref $file;
 
 	1;
@@ -316,7 +317,7 @@ L<FileHandle> support added by David Dick E<lt>ddick@cpan.orgE<gt>
 
 =head1 COPYRIGHT
 
-Copyright 2005 - 2008 Adam Kennedy.
+Copyright 2005 - 2009 Adam Kennedy.
 
 This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
